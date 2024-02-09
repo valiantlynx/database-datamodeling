@@ -1,0 +1,84 @@
+Øving 2 Databaser
+
+Obligatorisk
+
+Innleveringsfrist se Oppgave på Canvas
+
+Dette er en gruppe oppgave
+
+For å laste ned selve øvingen: Oblig Øving 2.pdf Oblig Øving 2.docx
+
+Denne øvingen skal være levert i Canvas før innleveringsfristen. Dere kan få den godkjent på lab uken etter innleveringsfristen. Denne øvingen løses i grupper som dere velger selv(samme gruppe hele semesteret). Dere bør begynne på denne øvingen så fort som mulig!!!
+
+Husk å levere som en gruppeinnlevering med alle gruppemedlemmene slik at jeg har en oversikt over hvem som jobber sammen.
+
+Som dere sikkert ser er de første oppgavene en del teori, mens resten er en blanding mellom teori og praksis.
+
+Er det noen praktiske problemer så kom til meg, noen problemer innad i gruppen så kom til meg og ellers noen problemer i det hele tatt så kom til meg så ser vi hvordan vi kan løse dem.
+
+Mail: halvard.oysad@uia.no eller så kom på kontor A3 068.
+
+Øving 2:
+
+1. Relasjoner:
+
+a) Dere skal forklare de forskjellige relasjonene mellom tabeller i en relasjonsdatabase (1:1, 1:n og n:m)?
+Vis disse relasjonene ved å bruke 2 eksempler for hver type (som ikke er i forelesningsnotatene).
+
+2. Nedenfor vises en tabell Auditorium med tilhørende kolonner med informasjon om en høgskoles ulike auditorier.
+
+Auditorium (tabell-navn)
+AKodeID - Entydig kode for hvert enkelt auditorium (eks: AudMax, AudMin, AudG,…)
+AntPlass - Antall sitteplasser i auditoriet
+VKanon - Informasjon om hvorvidt auditoriet har videokanon installert
+PC - Informasjon om hvorvidt auditoriet har en pc installert
+HSkole - Informasjon om hvilken høgskole auditoriet tilhører (eks: HiA, …)
+HAdr - Høgskolens adresse
+HTlf - Høgskolens telefonnummer (her ett telefonnummer pr høgskole)
+
+a) Forklar på hvilken måte tabellen Auditorium bryter med en eller flere av de tre normalformene 1NF, 2NF, 3NF.
+
+b) Forklar videre hvordan du ut fra tabellen Auditorium kan lage tabeller som oppfyller alle de tre normalformene 1NF, 2NF, 3NF.
+
+c) Nedenfor vises en tabell som oppfyller første normalform (1NF).
+
+Kolonnene som er markert med * utgjør tilsammen ID i denne tabellen.
+Pilene viser avhengighetsforhold mellom kolonnene.
+
+Vis hvordan tabellen kan splittes opp slik at den nye tabellen som fremkommer oppfyller
+tredje normalform (3NF).
+
+Oving2_2c.png
+
+3. Du skal lage en databaseløsning for legekonsultasjoner ved et legesenter hvor det arbeider noen primærleger.
+
+Vi tenker oss en forenklet løsning hvor vi ønsker å ta vare på følgende opplysninger:
+
+- Navn på legesenter
+- Legesenterets adresse (kun gatenavn)
+- Legesenterets telefonnummer
+- Et eget entydig nummer for hvert legekontor på legesenteret (hver lege har sitt eget kontor)
+- Telefonnummer inn til hvert enkelt legekontor
+- En entydig legekode for hver enkelt lege bestående av legens initialer (eks: NN = Nils Nilsen)
+- Navn på hver enkelt lege (fornavn og etternavn)
+- Personnummer til hver enkelt pasient
+- Navn (fornavn og etternavn) til hver enkelt pasient
+- Adresse til hver enkelt pasient (postnummer og poststed)
+- Telefonnummer til hver enkelt pasient
+
+a) Benytt opplysningene ovenfor til å lage en datamodell for legekonsultasjoner.
+
+b) Forklar hvilke tabeller datamodellen i a) gir opphav til.
+Merk tydelig av hva som er primærnøkkel (ID) i de enkelte tabellene.
+
+4. SQL Script:
+
+a) Lag et MySQL-script for modellen dere har fra oppgave 3. Dette SQL-scriptet skal lage en database ” legekonsultasjon”, legge inn alle tabellene og vedlikeholde relasjonene mellom dem. Kjør dette scriptet på en MySQL-database og se at det virker.
+
+b) Lag et nytt MySQL-script(eller la det bli tillegg til det i oppgave1a) som legger inn minst 5 rader/opplysninger i alle tabeller i databasen ” legekonsultasjon”. Kjør dette scriptet på en MySQL-database og se at det virker.
+
+c) Lag 3 egendefinerte SELECT spørringer mot databasen ”legekonsultasjon”. De skal alle inneholde SELECT, FROM og WHERE. Kjør disse spørringene på en MySQL-database og se at det virker.
+
+HUSK at hver av dere må gjøre(Individuelt)!!!
+
+Å gjennomfør Quiz for Databasedesign modulen med en score på 7 eller bedre.
