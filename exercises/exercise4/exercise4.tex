@@ -1,0 +1,124 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  breakatwhitespace=true,
+  postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+  language=SQL,
+  showspaces=false,
+  showstringspaces=false,
+  frame=single,
+  framesep=2pt,
+  framerule=0pt,
+  xleftmargin=2pt,
+  xrightmargin=2pt,
+  columns=flexible,
+  tabsize=2
+}
+
+
+\title{Databaser og Datamodellering Innlevering}
+\author{Gormery K. Wanjiru}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section*{SQL Queries}
+
+\subsection*{1a) List ut etternavn, fornavn og ansettelses-dato til samtlige selgere sortert på etternavn, deretter fornavn}
+
+\begin{lstlisting}[language=SQL]
+SELECT ENavn, FNavn, AnsDato
+FROM Selger
+ORDER BY ENavn, FNavn;
+\end{lstlisting}
+
+\subsection*{1b) List ut høyeste ordre-beløp som er knyttet til hver enkelt selger, forutsatt at beløpet er større enn 5000}
+
+\begin{lstlisting}[language=SQL]
+SELECT SNr, MAX(Salg)
+FROM Selger
+JOIN Ordre ON Selger.SNrID = Ordre.SNr
+GROUP BY SNr
+HAVING MAX(Salg) > 5000;
+\end{lstlisting}
+
+\subsection*{1c) Oppdater den recorden i tabellen Vare hvor MfrID = 'ACI' og PrID = '4100Y' ved å endre Pris til 3000}
+
+\begin{lstlisting}[language=SQL]
+UPDATE Vare
+SET Pris = 3000
+WHERE MfrID = 'ACI' AND PrID = '4100Y';
+\end{lstlisting}
+
+\subsection*{2a) List ut alle opplysningene om hvert kurs sortert i stigende rekkefølge på vekttall}
+
+\begin{lstlisting}[language=SQL]
+SELECT *
+FROM Kurs
+ORDER BY Vekttall ASC;
+\end{lstlisting}
+
+\subsection*{2b) List ut alle opplysningene om hvert kurs for de kurs som har vektall 3 eller mer}
+
+\begin{lstlisting}[language=SQL]
+SELECT KursNavn, KursKodeID, Vekttall, LKode
+FROM Kurs
+WHERE Vekttall >= 3
+ORDER BY Vekttall ASC, KursNavn ASC;
+\end{lstlisting}
+
+\subsection*{2c) List ut gjennomsnittskarakteren for hver enkelt student for alle de kurs hvor eksamen ble avlagt i 1999}
+
+\begin{lstlisting}[language=SQL]
+SELECT StudNrID, StudNavn, AVG(Karakter) AS Gjennomsnittskarakter, COUNT(KursKodeID) AS AntallKurs
+FROM Eksamen
+JOIN Student ON Eksamen.StudNrID = Student.StudNrID
+WHERE Aar = 1999 AND Karakter >= 2.0
+GROUP BY StudNrID
+HAVING AVG(Karakter) >= 2.0;
+\end{lstlisting}
+
+\subsection*{3a) Legg til en ny kolonne (tlf) i selgertabellen}
+
+\begin{lstlisting}[language=SQL]
+ALTER TABLE Selger
+ADD tlf VARCHAR(8) DEFAULT '11111111';
+\end{lstlisting}
+
+\subsection*{3b) Legg til en ny tabell (kategori)}
+
+\begin{lstlisting}[language=SQL]
+CREATE TABLE Kategori (
+    Kategori CHAR(1) NOT NULL PRIMARY KEY,
+    Navn VARCHAR(50)
+);
+
+INSERT INTO Kategori (Kategori, Navn) VALUES ('A', 'Elektronikk')
+INSERT INTO Kategori (Kategori, Navn) VALUES ('B', 'Mobler')
+INSERT INTO Kategori (Kategori, Navn) VALUES ('C', 'Klaer')
+\end{lstlisting}
+
+\subsection*{3c) Legg til kategori i tabellen vare og oppdater varetabellen}
+
+\begin{lstlisting}[language=SQL]
+ALTER TABLE Vare
+ADD Kategori CHAR(1);
+
+-- e.g jeg oppdaterer alle varer til kategori 'A'.
+UPDATE Vare
+SET Kategori = 'A';
+
+ALTER TABLE Vare
+ADD CONSTRAINT FK_VareKategori FOREIGN KEY (Kategori) REFERENCES Kategori(Kategori);
+\end{lstlisting}
+
+\end{document}
+
