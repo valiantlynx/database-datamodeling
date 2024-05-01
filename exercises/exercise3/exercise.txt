@@ -1,0 +1,78 @@
+Øving 3 Databaser
+
+Obligatorisk
+
+Innleveringsfrist se Oppgave på Canvas
+
+Dette er en gruppe oppgave
+
+For å laste ned selve øvingen: Oblig Øving 3.pdf Oblig Øving 3.docx
+
+Denne øvingen skal være levert i Canvas før innleveringsfristen. Dere kan få den godkjent på lab uken etter innleveringsfristen. Denne øvingen løses i grupper som dere velger selv(samme gruppe hele semesteret). Dere bør begynne på denne øvingen så fort som mulig!!!
+
+Husk å levere som en gruppeinnlevering med alle gruppemedlemmene slik at jeg har en oversikt over hvem som jobber sammen.
+
+Som dere sikkert ser er de første oppgavene en del teori, mens resten er en blanding mellom teori og praksis.
+
+Er det noen praktiske problemer så kom til meg, noen problemer innad i gruppen så kom til meg og ellers noen problemer i det hele tatt så kom til meg så ser vi hvordan vi kan løse dem.
+
+Mail: halvard.oysad@uia.no eller så kom på kontor A3 068.
+
+Øving 3:
+
+1. Modellering
+
+Du har fått i oppdrag å lage et databasesystem til bruk ved flyplasser.
+Vi lager en forenklet modell av virkeligheten og tenker oss at database-systemet (relasjonsdatabase)
+i hovedsak skal holde oversikt over ankomst / avgang.
+Hver enkelt flyplass har sin egen unike identifikasjonskode (FPKode).
+Hver enkelt rullebane har sine egen unike identifikasjonskode (RKode).
+To forskjellige flyplasser har ikke rullebaner med samme kode.
+En flyplass kan ha mer enn en rullebane.
+Videre skal hver rullebane registreres med posisjon (Pos) og lengde (Lengde).
+Hvert av flyene som ankommer eller reiser fra denne flyplassen er registrert med en egen
+identifikasjons-flykode (FKode).
+For hvert fly som ankommer eller reiser skal det videre registreres hvilket flyselskap (FSelskap) dette flyet tilhører, antall passasjerplasser totalt i dette flyet (PPlass), antall passasjerer (AntPerson) som er med ved denne ankomsten /avreisen samt informasjon om hvorvidt dette er en ankomst eller en avreise (en kolonne Reise settes lik ”Ank” ved ankomst og ”Avr” ved avreise) og tidspunkt for ankomsten / avreisen.
+Videre skal det registreres navn på flyplassene (FNavn) samt et hovedtelefon-nummer til hver av
+flyplassene.
+
+Modellen skal kontrollere at to fly ikke befinner seg på samme rullebane til samme tid.
+
+a) Lag en datamodell svarende til opplysningene ovenfor (benytt helst Kråkefot-notasjonen
+som er benyttet i forelesningene).
+
+b) Vis hvilke tabeller som fremkommer fra denne datamodellen.
+Det skal tydelig vises hvilke kolonner (felter) som tilhører hver enkelt tabell,
+samt hvilke(n) kolonne(r) som utgjør ID i de enkelte tabellene.
+
+c) Legg inn disse tabellene i MySQL slik dere gjorde i oppgave 4a og 4b i Øving 2.
+
+d) Skriv følgende SQL-statement knyttet til denne relasjons-databasen:
+
+1) List ut flyplasskode, navn og telefonnummer til hver av flyplassene.
+2) For flyplassen ”Gardermoen” med kode ”OSL” skal det listes ut rullebane-kode samt posisjon og lengde til hver enkelt av rullebanene.
+3) For hver enkelt flyplass skal det skrives ut antall passasjerer som ankommer flyplassen
+dato 19.05.05. Vi antar at tid-informasjonen er delt inn i dato (Dato) og klokkeslett (Klokke),
+slik at test på dato kan gjøres ved Dato = ”19.05.05”.
+
+2.
+
+Last ned og installer eksempel databasen Sakila, fra http://dev.mysql.com/doc/index-other.htmlLinks to an external site. , i MySQL. Informasjon om hvordan dere installerer denne databasen finner dere her: http://dev.mysql.com/doc/sakila/en/index.htmlLinks to an external site..
+
+a) Lag 5 fornuftige SELECT, FROM, WHERE statements fra denne databasen. Statementsene skal ta ut noe relevant informasjon fra databasen.
+
+b) Lag et statement som inneholdet GROUP BY.
+
+c) Lag et statement som inneholder GROUP BY og ORDER BY.
+
+d) Lage et UPDATE statement.
+
+e) Lage et INSERT statement.
+
+f) Lag et enkelt, men fornuftig VIEW statement.
+
+Det var siste oppgave sjekk Fronter for innleveringstidspunkt.
+
+HUSK at hver av dere må gjøre(Individuelt)!!!
+
+Å gjennomfør Quiz for SQL modulen med en score på 7 eller bedre.

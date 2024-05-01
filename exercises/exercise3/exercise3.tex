@@ -1,0 +1,58 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{booktabs}
+\usepackage{longtable}
+
+\title{Database Modellering og SQL Spørringer}
+\author{Ditt Navn}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Modellering av Flyplassdatabasesystem}
+
+\subsection{Datamodell}
+Vi har designet en datamodell for å representere flyplasser, rullebaner, fly og flyvninger. Modellen sikrer at vi kan holde oversikt over ankomster og avganger, samt unngå at to fly befinner seg på samme rullebane til samme tid.
+
+\subsection{Tabeller}
+Datamodellen er realisert gjennom følgende tabeller:
+
+\begin{itemize}
+    \item \textbf{Flyplass}: Lagrer informasjon om hver flyplass, inkludert en unik identifikasjonskode, navn og hovedtelefonnummer.
+    \item \textbf{Rullebane}: Inneholder detaljer om rullebanene, hver med en unik kode, posisjon, lengde, og tilhørende flyplasskode.
+    \item \textbf{Fly}: Informasjon om hvert fly, inkludert identifikasjonskode, flyselskap og antall passasjerplasser.
+    \item \textbf{Flyvning}: Registrerer hver ankomst og avreise, med detaljer som flykode, rullebanekode, dato, klokkeslett, reisetype, og antall passasjerer.
+\end{itemize}
+
+\subsection{SQL Statements}
+Her er noen eksempler på SQL-spørringer for å hente ut informasjon fra databasen:
+
+\begin{verbatim}
+-- Liste flyplasskode, navn, og telefonnummer
+SELECT FPKode, FNavn, HovedTelefon FROM Flyplass;
+
+-- Detaljer for rullebaner på Gardermoen (OSL)
+SELECT RKode, Pos, Lengde FROM Rullebane WHERE FPKode = 'OSL';
+
+-- Antall passasjerer som ankommer en flyplass den 19.05.05
+SELECT FPKode, SUM(AntPerson) AS TotaltAntallPassasjerer 
+FROM Flyvning 
+JOIN Rullebane ON Flyvning.RKode = Rullebane.RKode 
+WHERE Dato = '2005-05-19' AND Reise = 'Ank' 
+GROUP BY FPKode;
+\end{verbatim}
+
+\section{Arbeid med Sakila-databasen}
+
+\subsection{SELECT Statements}
+Ettersom Sakila-databasens skjema er omfattende, vil denne seksjonen illustrere generelle tilnærminger for å skrive SELECT-spørringer for å hente ut relevant informasjon.
+
+\subsection{Avanserte SQL-spørringer}
+Dette inkluderer bruk av \texttt{GROUP BY}, \texttt{ORDER BY}, samt oppdatering og innsetting av data.
+
+\section{Konklusjon}
+Denne rapporten har beskrevet utformingen av en database for å administrere flyplassoperasjoner og hvordan man kan interagere med Sakila-databasen ved hjelp av SQL. Videre arbeid kan inkludere mer detaljerte spørringer for å analysere dataene på forskjellige måter.
+
+\end{document}
