@@ -1,0 +1,278 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+
+\title{Database Design and Modeling}
+\author{University Exam}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section*{Introduction}
+
+This document provides a detailed methodology for database design and modeling, focusing primarily on the conceptual and logical design phases. The methodology follows the steps outlined in the provided Connolly and Begg's database design guidelines.
+
+\section*{Step 1: Conceptual Database Design}
+
+The conceptual database design phase involves building a conceptual representation of the database that includes identifying the important entities, relationships, and attributes. The steps are as follows:
+
+\subsection*{Step 1.1: Identify Entity Types}
+Identify the main objects of interest (entities) within the given problem statement. These are typically nouns or noun phrases in the specification.
+
+\begin{itemize}
+    \item \textbf{Staff}
+    \item \textbf{PropertyForRent}
+    \item \textbf{PrivateOwner}
+    \item \textbf{BusinessOwner}
+    \item \textbf{Client}
+    \item \textbf{Preference}
+    \item \textbf{Lease}
+\end{itemize}
+
+\subsection*{Step 1.2: Identify Relationship Types}
+Determine the relationships between the identified entities. Relationships are usually verbs or verb phrases.
+
+\begin{itemize}
+    \item \textbf{Staff Manages PropertyForRent}
+    \item \textbf{PrivateOwner Owns PropertyForRent}
+    \item \textbf{PropertyForRent AssociatedWith Lease}
+\end{itemize}
+
+\subsection*{Step 1.3: Identify and Associate Attributes with Entity or Relationship Types}
+List the attributes for each entity or relationship.
+
+\begin{itemize}
+    \item \textbf{Staff}: staffNo, fName, lName, position, sex, DOB
+    \item \textbf{PropertyForRent}: propertyNo, address, type, rooms, rent
+    \item \textbf{PrivateOwner}: ownerNo, name, address, telNo
+    \item \textbf{BusinessOwner}: ownerNo, bName, bType, address, telNo, contactName
+    \item \textbf{Client}: clientNo, fName, lName, telNo, eMail
+    \item \textbf{Preference}: prefType, maxRent
+    \item \textbf{Lease}: leaseNo, paymentMethod, deposit, depositPaid, rentStart, rentFinish
+\end{itemize}
+
+\subsection*{Step 1.4: Determine Attribute Domains}
+Define the domain for each attribute.
+
+\begin{itemize}
+    \item \textbf{staffNo}: String(5)
+    \item \textbf{fName, lName}: String(50)
+    \item \textbf{position}: String(30)
+    \item \textbf{sex}: Char(1) {'M', 'F'}
+    \item \textbf{DOB}: Date
+    \item \textbf{propertyNo}: String(5)
+    \item \textbf{address}: Composite {street: String(100), city: String(50), postcode: String(10)}
+    \item \textbf{type}: String(20)
+    \item \textbf{rooms}: Integer
+    \item \textbf{rent}: Decimal
+    \item \textbf{ownerNo}: String(5)
+    \item \textbf{name, bName, contactName}: String(50)
+    \item \textbf{bType}: String(20)
+    \item \textbf{telNo}: String(15)
+    \item \textbf{clientNo}: String(5)
+    \item \textbf{telNo, eMail}: String(50)
+    \item \textbf{prefType}: String(20)
+    \item \textbf{maxRent}: Decimal
+    \item \textbf{leaseNo}: String(5)
+    \item \textbf{paymentMethod}: String(20)
+    \item \textbf{deposit, depositPaid}: Decimal
+    \item \textbf{rentStart, rentFinish}: Date
+\end{itemize}
+
+\subsection*{Step 1.5: Determine Candidate, Primary, and Alternate Key Attributes}
+Identify the candidate keys for each entity and choose the primary key.
+
+\begin{itemize}
+    \item \textbf{Staff}: Primary Key = staffNo
+    \item \textbf{PropertyForRent}: Primary Key = propertyNo
+    \item \textbf{PrivateOwner}: Primary Key = ownerNo
+    \item \textbf{BusinessOwner}: Primary Key = ownerNo
+    \item \textbf{Client}: Primary Key = clientNo
+    \item \textbf{Preference}: Composite Key = {clientNo, prefType}
+    \item \textbf{Lease}: Primary Key = leaseNo
+\end{itemize}
+
+\subsection*{Step 1.6: Consider Use of Enhanced Modeling Concepts (Optional)}
+Use enhanced ER modeling concepts like generalization/specialization, aggregation, or composition if necessary. For instance, PrivateOwner and BusinessOwner can be specialized from Owner.
+
+\subsection*{Step 1.7: Check Model for Redundancy}
+Re-examine the model to ensure there are no redundant entities or relationships.
+
+\subsection*{Step 1.8: Validate Conceptual Data Model Against User Transactions}
+Ensure that the conceptual data model supports all the user transactions by mapping each transaction to the data model.
+
+\subsection*{Step 1.9: Review Conceptual Data Model with User}
+Review the conceptual data model with the user to ensure it meets their requirements and expectations.
+
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}
+  [entity/.style={draw, rectangle, minimum height=2em, minimum width=5em, text centered},
+  relationship/.style={draw, diamond, minimum height=2em, minimum width=5em, text centered, aspect=2}]
+
+  \node[entity] (staff) {Staff};
+  \node[entity] (property) {PropertyForRent};
+  \node[entity] (lease) {Lease};
+  \node[entity] (privateowner) {PrivateOwner};
+  \node[entity] (businessowner) {BusinessOwner};
+  \node[entity] (client) {Client};
+  \node[entity] (preference) {Preference};
+
+  \node[relationship, below left=1cm and 1cm of staff] (manages) {Manages};
+  \node[relationship, below right=1cm and 1cm of privateowner] (owns) {Owns};
+  \node[relationship, above right=1cm and 1cm of lease] (associated) {AssociatedWith};
+
+  \draw (staff) -- (manages);
+  \draw (manages) -- (property);
+  \draw (privateowner) -- (owns);
+  \draw (owns) -- (property);
+  \draw (property) -- (associated);
+  \draw (associated) -- (lease);
+\end{tikzpicture}
+\caption{ER Diagram for Conceptual Data Model}
+\end{figure}
+
+\newpage
+
+\section*{Step 2: Logical Database Design}
+
+The logical database design phase translates the conceptual data model into a logical structure that can be implemented using a DBMS such as MySQL or SQLite.
+
+\subsection*{Step 2.1: Derive Relations for Logical Data Model}
+Create relations for each entity and relationship identified in the conceptual model.
+
+\begin{itemize}
+    \item \textbf{Staff (staffNo, fName, lName, position, sex, DOB)}
+    \item \textbf{PropertyForRent (propertyNo, address, type, rooms, rent)}
+    \item \textbf{PrivateOwner (ownerNo, name, address, telNo)}
+    \item \textbf{BusinessOwner (ownerNo, bName, bType, address, telNo, contactName)}
+    \item \textbf{Client (clientNo, fName, lName, telNo, eMail, staffNo)}
+    \item \textbf{Preference (clientNo, prefType, maxRent)}
+    \item \textbf{Lease (leaseNo, propertyNo, clientNo, paymentMethod, deposit, depositPaid, rentStart, rentFinish)}
+\end{itemize}
+
+\subsection*{Step 2.2: Validate Relations Using Normalization}
+Ensure that each relation is in at least the Third Normal Form (3NF) to avoid redundancy and ensure data integrity.
+
+\subsection*{Step 2.3: Validate Relations Against User Transactions}
+Check that each relation supports the necessary user transactions. For example, listing properties managed by a specific staff member would involve joining the \textit{Staff} and \textit{PropertyForRent} tables.
+
+\subsection*{Step 2.4: Check Integrity Constraints}
+Ensure all primary keys, foreign keys, and other constraints are correctly applied.
+
+\subsection*{Step 2.5: Review Logical Data Model with User}
+Review the logical data model with the user to confirm that it accurately reflects their requirements.
+
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}
+  [entity/.style={draw, rectangle, minimum height=2em, minimum width=5em, text centered},
+  relationship/.style={draw, diamond, minimum height=2em, minimum width=5em, text centered, aspect=2}]
+
+  \node[entity] (staff) {Staff};
+  \node[entity, below=2cm of staff] (property) {PropertyForRent};
+  \node[entity, right=2cm of property] (lease) {Lease};
+  \node[entity, below=2cm of property] (privateowner) {PrivateOwner};
+  \node[entity, below=2cm of privateowner] (businessowner) {BusinessOwner};
+  \node[entity, right=2cm of privateowner] (client) {Client};
+  \node[entity, below=2cm of client] (preference) {Preference};
+
+  \node[relationship, below left=1cm and 1cm of staff] (manages) {Manages};
+  \node[relationship, below right=1cm and 1cm of privateowner] (owns) {Owns};
+  \node[relationship, above right=1cm and 1cm of lease] (associated) {AssociatedWith};
+
+  \draw (staff) -- (manages);
+  \draw (manages) -- (property);
+  \draw (privateowner) -- (owns);
+  \draw (owns) -- (property);
+  \draw (property) -- (associated);
+  \draw (associated) -- (lease);
+\end{tikzpicture}
+\caption{ER Diagram for Logical Data Model}
+\end{figure}
+
+\newpage
+
+\section*{Step 3: Physical Database Design (Not Covered)}
+
+This document focuses on the first two steps of the database design methodology. The physical design phase, which involves implementing the logical data model in a specific DBMS, is not covered.
+
+\section*{SQL Implementation}
+
+To demonstrate the implementation, below are sample SQL statements for creating tables in MySQL/SQLite based on the logical model.
+
+\subsection*{Create Tables}
+
+\begin{verbatim}
+CREATE TABLE Staff (
+    staffNo VARCHAR(5) PRIMARY KEY,
+    fName VARCHAR(50),
+    lName VARCHAR(50),
+    position VARCHAR(30),
+    sex CHAR(1),
+    DOB DATE
+);
+
+CREATE TABLE PropertyForRent (
+    propertyNo VARCHAR(5) PRIMARY KEY,
+    address VARCHAR(100),
+    type VARCHAR(20),
+    rooms INTEGER,
+    rent DECIMAL
+);
+
+CREATE TABLE PrivateOwner (
+    ownerNo VARCHAR(5) PRIMARY KEY,
+    name VARCHAR(50),
+    address VARCHAR(100),
+    telNo VARCHAR(15)
+);
+
+CREATE TABLE BusinessOwner (
+    ownerNo VARCHAR(5) PRIMARY KEY,
+    bName VARCHAR(50),
+    bType VARCHAR(20),
+    address VARCHAR(100),
+    telNo VARCHAR(15),
+    contactName VARCHAR(50)
+);
+
+CREATE TABLE Client (
+    clientNo VARCHAR(5) PRIMARY KEY,
+    fName VARCHAR(50),
+    lName VARCHAR(50),
+    telNo VARCHAR(50),
+    eMail VARCHAR(50),
+    staffNo VARCHAR(5),
+    FOREIGN KEY (staffNo) REFERENCES Staff(staffNo)
+);
+
+CREATE TABLE Preference (
+    clientNo VARCHAR(5),
+    prefType VARCHAR(20),
+    maxRent DECIMAL,
+    PRIMARY KEY (clientNo, prefType)
+);
+
+CREATE TABLE Lease (
+    leaseNo VARCHAR(5) PRIMARY KEY,
+    propertyNo VARCHAR(5),
+    clientNo VARCHAR(5),
+    paymentMethod VARCHAR(20),
+    deposit DECIMAL,
+    depositPaid DECIMAL,
+    rentStart DATE,
+    rentFinish DATE,
+    FOREIGN KEY (propertyNo) REFERENCES PropertyForRent(propertyNo),
+    FOREIGN KEY (clientNo) REFERENCES Client(clientNo)
+);
+\end{verbatim}
+
+\end{document}
