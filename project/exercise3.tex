@@ -432,14 +432,20 @@ Review the logical data model with the user for accuracy and completeness. \\
 \newpage
 
 \section*{Physical Database Design}
-The physical database design involves translating the logical data model into a physical implementation on MySQL. This includes defining the SQL schema and constraints.
+The physical database is simply a physical implementation on MySQL. This below is the SQL schema and constraints.
 
 \subsection*{Step 3.1: Translate Logical Data Model for MySQL}
-Create SQL scripts for each table based on the logical data model.
+Here there is 3 scripts \\
+scripts for each table based on the logical data model.
+scripts for populating the model.\\
+scripts for running transactions.\\
+
+lastly there is the simple terminal test app.
+
 
 \subsection*{SQL Implementation}
 
-\subsubsection*{Create Tables}
+\subsubsection*{SQL Scripts for Creating the Database and Tables}
 \begin{lstlisting}[language=SQL]
 CREATE TABLE Office (
     officeID INT PRIMARY KEY,
@@ -522,6 +528,117 @@ CREATE TABLE Job (
     FOREIGN KEY (contractID) REFERENCES Contract(contractID)
 );
 \end{lstlisting}
+
+\subsubsection*{SQL Scripts for Populating the Database}
+\begin{lstlisting}[language=SQL]
+    -- Populate Office
+    INSERT INTO Office (officeID, city) VALUES (1, 'Grimstad'), (2, 'Oslo'), (3, 'Bergen');
+    
+    -- Populate Manager
+    INSERT INTO Manager (managerID, name, phone, officeID) VALUES 
+    (1, 'John Doe', '12345678', 1),
+    (2, 'Jane Smith', '23456789', 2),
+    (3, 'Emily Davis', '34567890', 3);
+    
+    -- Populate CarOwner
+    INSERT INTO CarOwner (ownerID, name, phone) VALUES 
+    (1, 'Alice Johnson', '45678901'),
+    (2, 'Robert Brown', '56789012');
+    
+    -- Populate Driver
+    INSERT INTO Driver (driverID, name, sex, DOB, phone, officeID) VALUES 
+    (1, 'Michael Clark', 'M', '1980-01-01', '67890123', 1),
+    (2, 'Sarah Lewis', 'F', '1985-02-02', '78901234', 2);
+    
+    -- Populate AdministrativeStaff
+    INSERT INTO AdministrativeStaff (staffID, name, phone, officeID) VALUES 
+    (1, 'Olivia Martinez', '89012345', 1),
+    (2, 'Liam Wilson', '90123456', 2);
+    
+    -- Populate Car
+    INSERT INTO Car (carID, registrationNo, model, ownerID) VALUES 
+    (1, 'AB12345', 'Toyota', 1),
+    (2, 'BC23456', 'Honda', 2);
+    
+    -- Populate PrivateClient
+    INSERT INTO PrivateClient (clientID, name, phone, address) VALUES 
+    (1, 'Noah Moore', '12345678', '123 Street, Grimstad');
+    
+    -- Populate BusinessClient
+    INSERT INTO BusinessClient (clientID, name, phone, address) VALUES 
+    (1, 'TechCorp', '23456789', '456 Avenue, Oslo');
+    
+    -- Populate Contract
+    INSERT INTO Contract (contractID, clientID, numberOfJobs, fee) VALUES 
+    (1, 1, 10, 5000.00);
+    
+    -- Populate Job
+    INSERT INTO Job (jobID, clientID, contractID, pickUpDateTime, pickUpAddress, dropOffAddress, mileage, charge, status) VALUES 
+    (1, 1, NULL, '2023-05-01 10:00:00', '789 Boulevard, Bergen', '123 Street, Grimstad', 10, 100.00, 'Completed'),
+    (2, 1, 1, '2023-05-02 11:00:00', '456 Avenue, Oslo', '789 Boulevard, Bergen', 20, NULL, 'Completed');
+    
+\end{lstlisting}
+
+\subsubsection*{SQL Scripts for Running Transactions}
+\begin{lstlisting}[language=SQL]
+    -- Transaction to find names and phone numbers of the Managers at each office
+    SELECT name, phone FROM Manager;
+    
+    -- Transaction to find names of all female drivers based in the Grimstad office
+    SELECT name FROM Driver WHERE sex = 'F' AND officeID = 1;
+    
+    -- Transaction to find total number of staff at each office
+    SELECT officeID, COUNT(*) AS total_staff FROM 
+    (
+        SELECT officeID FROM Manager 
+        UNION ALL 
+        SELECT officeID FROM Driver 
+        UNION ALL 
+        SELECT officeID FROM AdministrativeStaff
+    ) AS staff
+    GROUP BY officeID;
+    
+    -- Transaction to find details of all cars at the Grimstad office
+    SELECT carID, registrationNo, model FROM Car WHERE ownerID IN (SELECT ownerID FROM CarOwner WHERE officeID = 1);    
+\end{lstlisting}
+
+\subsubsection*{simple console app}
+\begin{verbatim}
+    using System;
+    using MySql.Data.MySqlClient;
+    
+    class Program
+    {
+        static void Main()
+        {
+            string connectionString = "Server=localhost;Database=PrivatTransport;User ID=root;Password=password;";
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                conn.Open();
+    
+                // Example of inserting a new driver
+                string insertDriverQuery = "INSERT INTO Driver (driverID, name, sex, DOB, phone, officeID) VALUES (3, 'Laura Thompson', 'F', '1990-03-03', '34567890', 1)";
+                using (MySqlCommand cmd = new MySqlCommand(insertDriverQuery, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+    
+                // Example of selecting all drivers
+                string selectDriversQuery = "SELECT * FROM Driver";
+                using (MySqlCommand cmd = new MySqlCommand(selectDriversQuery, conn))
+                {
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Console.WriteLine($"{reader["driverID"]}, {reader["name"]}, {reader["sex"]}, {reader["DOB"]}, {reader["phone"]}, {reader["officeID"]}");
+                        }
+                    }
+                }
+            }
+        }
+    }    
+\end{verbatim}
 
 \section*{Conclusion}
 This report shows the complete database design process for Privat Transport, including conceptual, logical, and physical design phases. The models and SQL scripts provided ensure a robust database implementation suitable for the company's needs.
