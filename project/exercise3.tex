@@ -5,6 +5,9 @@
 \usepackage{graphicx}
 \usepackage{tikz}
 \usepackage{geometry}
+\usepackage{tabularx}
+\usepackage{xcolor}
+\usepackage{colortbl}
 \usetikzlibrary{positioning,shapes.geometric}
 \geometry{a4paper, margin=1in}
 \title{Database Design for Privat Transport}
@@ -14,24 +17,31 @@
 \maketitle
 
 \section*{Introduction}
-This report is the database design process for Privat Transport, a private transport company established in Grimstad in 2023. The design follows a structured methodology comprising conceptual, logical, and physical database design phases. The goal is to create a database application to support the operations of Privat Transport, addressing issues of information sharing and administrative efficiency.
+This document details the database design process for Privat Transport, a private transport company established in Grimstad in 2023. The design follows a structured methodology comprising conceptual, logical, and physical database design phases. The objective is to create a database application to support the operations of Privat Transport, addressing issues of information sharing and administrative efficiency.
 
 \section*{Conceptual Database Design}
-The conceptual database design is constructing a model of the data requirements independent of physical considerations. The steps include identifying entity types, relationship types, attributes, and keys, and validating the model against user transactions.
+The conceptual database design involves constructing a model of the data requirements independent of physical considerations. The steps include identifying entity types, relationship types, attributes, and keys, and validating the model against user transactions.
 
 \subsection*{Step 1.1: Identify Entity Types}
-\begin{itemize}
-    \item \textbf{Office}
-    \item \textbf{Manager}
-    \item \textbf{CarOwner}
-    \item \textbf{Driver}
-    \item \textbf{AdministrativeStaff}
-    \item \textbf{Car}
-    \item \textbf{PrivateClient}
-    \item \textbf{BusinessClient}
-    \item \textbf{Contract}
-    \item \textbf{Job}
-\end{itemize}
+\begin{table}[ht]
+\centering
+\begin{tabularx}{\textwidth}{|X|}
+\hline
+\rowcolor{blue!20} \textbf{Entity Types} \\
+\hline
+Office \\
+Manager \\
+CarOwner \\
+Driver \\
+AdministrativeStaff \\
+Car \\
+PrivateClient \\
+BusinessClient \\
+Contract \\
+Job \\
+\hline
+\end{tabularx}
+\end{table}
 
 \subsection*{Step 1.2: Identify Relationship Types}
 \begin{itemize}
@@ -47,30 +57,44 @@ The conceptual database design is constructing a model of the data requirements 
 \end{itemize}
 
 \subsection*{Step 1.3: Identify and Associate Attributes}
-\begin{itemize}
-    \item \textbf{Office}: officeID, city
-    \item \textbf{Manager}: managerID, name, phone, officeID
-    \item \textbf{CarOwner}: ownerID, name, phone
-    \item \textbf{Driver}: driverID, name, sex, DOB, phone, officeID
-    \item \textbf{AdministrativeStaff}: staffID, name, phone, officeID
-    \item \textbf{Car}: carID, registrationNo, model, ownerID
-    \item \textbf{PrivateClient}: clientID, name, phone, address
-    \item \textbf{BusinessClient}: clientID, name, phone, address
-    \item \textbf{Contract}: contractID, clientID, numberOfJobs, fee
-    \item \textbf{Job}: jobID, clientID, contractID, pickUpDateTime, pickUpAddress, dropOffAddress, mileage, charge, status
-\end{itemize}
+\begin{table}[ht]
+\centering
+\begin{tabularx}{\textwidth}{|X|X|}
+\hline
+\rowcolor{blue!20} \textbf{Entity} & \textbf{Attributes} \\
+\hline
+Office & officeID, city \\
+Manager & managerID, name, phone, officeID \\
+CarOwner & ownerID, name, phone \\
+Driver & driverID, name, sex, DOB, phone, officeID \\
+AdministrativeStaff & staffID, name, phone, officeID \\
+Car & carID, registrationNo, model, ownerID \\
+PrivateClient & clientID, name, phone, address \\
+BusinessClient & clientID, name, phone, address \\
+Contract & contractID, clientID, numberOfJobs, fee \\
+Job & jobID, clientID, contractID, pickUpDateTime, pickUpAddress, dropOffAddress, mileage, charge, status \\
+\hline
+\end{tabularx}
+\end{table}
 
 \subsection*{Step 1.4: Determine Attribute Domains}
-\begin{itemize}
-    \item \textbf{officeID}: Integer
-    \item \textbf{managerID, ownerID, driverID, staffID, clientID, contractID, jobID}: Integer
-    \item \textbf{name, phone, address, model, registrationNo}: String
-    \item \textbf{sex}: Char (M, F)
-    \item \textbf{DOB, pickUpDateTime}: Date
-    \item \textbf{numberOfJobs, mileage}: Integer
-    \item \textbf{fee, charge}: Decimal
-    \item \textbf{status}: String (Completed, Failed)
-\end{itemize}
+\begin{table}[ht]
+\centering
+\begin{tabularx}{\textwidth}{|X|X|}
+\hline
+\rowcolor{blue!20} \textbf{Attribute} & \textbf{Domain} \\
+\hline
+officeID & Integer \\
+managerID, ownerID, driverID, staffID, clientID, contractID, jobID & Integer \\
+name, phone, address, model, registrationNo & String \\
+sex & Char (M, F) \\
+DOB, pickUpDateTime & Date \\
+numberOfJobs, mileage & Integer \\
+fee, charge & Decimal \\
+status & String (Completed, Failed) \\
+\hline
+\end{tabularx}
+\end{table}
 
 \subsection*{Step 1.5: Determine Candidate, Primary, and Alternate Key Attributes}
 \begin{itemize}
@@ -164,18 +188,27 @@ For this step we would simply review if the ER diagram below encompasses the req
 The logical database design translates the conceptual data model into a relational model. The steps include deriving relations, validating them using normalization, and ensuring they support user transactions.
 
 \subsection*{Step 2.1: Derive Relations for Logical Data Model}
-\begin{itemize}
-    \item \textbf{Office(officeID, city)}
-    \item \textbf{Manager(managerID, name, phone, officeID)}
-    \item \textbf{CarOwner(ownerID, name, phone)}
-    \item \textbf{Driver(driverID, name, sex, DOB, phone, officeID)}
-    \item \textbf{AdministrativeStaff(staffID, name, phone, officeID)}
-    \item \textbf{Car(carID, registrationNo, model, ownerID)}
-    \item \textbf{PrivateClient(clientID, name, phone, address)}
-    \item \textbf{BusinessClient(clientID, name, phone, address)}
-    \item \textbf{Contract(contractID, clientID, numberOfJobs, fee)}
-    \item \textbf{Job(jobID, clientID, contractID, pickUpDateTime, pickUpAddress, dropOffAddress, mileage, charge, status)}
-\end{itemize}
+\begin{table}[ht]
+\centering
+\begin{tabularx}{\textwidth}{|X|X|}
+\hline
+\rowcolor{green!20} \textbf{Relations for Logical Data Model} \\
+\hline
+Office(officeID, city) \\
+Manager(managerID, name, phone, officeID) \\
+CarOwner(ownerID, name, phone) \\
+Driver(driverID, name, sex, DOB, phone, officeID) \\
+AdministrativeStaff(staffID, name, phone, officeID) \\
+Car(carID, registrationNo, model, ownerID) \\
+PrivateClient(clientID, name, phone, address) \\
+BusinessClient(clientID, name, phone, address) \\
+Contract(contractID, clientID, numberOfJobs, fee) \\
+Job(jobID, clientID, contractID, pickUpDateTime, pickUpAddress, dropOffAddress, mileage, charge, status) \\
+\hline
+\end{tabularx}
+\end{table}
+
+\newpage
 
 \subsection*{Step 2.2: Validate Relations Using Normalization}
 Ensure all relations are in at least Third Normal Form (3NF) to eliminate redundancy and ensure data integrity.
