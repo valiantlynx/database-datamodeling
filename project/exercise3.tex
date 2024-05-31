@@ -8,7 +8,7 @@
 \usetikzlibrary{positioning,shapes.geometric}
 \geometry{a4paper, margin=1in}
 \title{Database Design for Privat Transport}
-\author{4060}
+\author{University Exam}
 \date{\today}
 \begin{document}
 \maketitle
@@ -108,10 +108,10 @@ The conceptual database design involves constructing a model of the data require
 
 \begin{figure}[!ht]
 \centering
-\begin{tikzpicture}[node distance=2cm]
+\begin{tikzpicture}[node distance=2cm, every node/.style={fill=white,draw}]
   \tikzset{
-    entity/.style={draw, rectangle, minimum height=2em, minimum width=5em, text centered},
-    relationship/.style={draw, diamond, minimum height=2em, minimum width=5em, text centered}
+    entity/.style={draw, rectangle, minimum height=2em, minimum width=5em, text centered, fill=blue!20},
+    relationship/.style={draw, diamond, minimum height=2em, minimum width=5em, text centered, fill=red!20}
   }
 
   \node[entity] (office) {Office};
@@ -119,21 +119,21 @@ The conceptual database design involves constructing a model of the data require
   \node[entity, below=of manager] (owner) {CarOwner};
   \node[entity, below=of owner] (driver) {Driver};
   \node[entity, below=of driver] (staff) {AdministrativeStaff};
-  \node[entity, right=of owner] (car) {Car};
-  \node[entity, right=of car] (job) {Job};
-  \node[entity, above=of job] (pclient) {PrivateClient};
-  \node[entity, below=of job] (bclient) {BusinessClient};
-  \node[entity, right=of job] (contract) {Contract};
+  \node[entity, right=2cm of owner] (car) {Car};
+  \node[entity, right=1cm of car] (job) {Job};
+  \node[entity, above=1cm of job] (pclient) {PrivateClient};
+  \node[entity, below=1cm of job] (bclient) {BusinessClient};
+  \node[entity, right=1cm of job] (contract) {Contract};
 
-  \node[relationship, above right=of manager] (manages) {Manages};
-  \node[relationship, below right=of owner] (owns) {Owns};
-  \node[relationship, below right=of driver] (drives) {Drives};
-  \node[relationship, below left=of staff] (employs) {Employs};
-  \node[relationship, above right=of job] (requests) {Requests};
-  \node[relationship, below right=of job] (has) {Has};
-  \node[relationship, below left=of job] (includes) {Includes};
-  \node[relationship, below right=of job] (assignedto) {AssignedTo};
-  \node[relationship, below left=of job] (uses) {Uses};
+  \node[relationship, above right=1cm and 1cm of manager] (manages) {Manages};
+  \node[relationship, below right=-2cm and 1cm of owner] (owns) {Owns};
+  \node[relationship, below right=-2cm and 1cm of driver] (drives) {Drives};
+  \node[relationship, below left=1cm and 1cm of staff] (employs) {Employs};
+  \node[relationship, above right=1cm and 1cm of job] (requests) {Requests};
+  \node[relationship, below right=3cm and 2cm of job] (has) {Has};
+  \node[relationship, below left=2cm and 1cm of job] (includes) {Includes};
+  \node[relationship, below right=6cm and 1cm of job] (assignedto) {AssignedTo};
+  \node[relationship, below left=-3cm and 1cm of job] (uses) {Uses};
 
   \draw (office) -- (manages);
   \draw (manages) -- (manager);
@@ -190,10 +190,10 @@ Review the logical data model with the user for accuracy and completeness.
 
 \begin{figure}[!ht]
 \centering
-\begin{tikzpicture}[node distance=2cm]
+\begin{tikzpicture}[node distance=2cm, every node/.style={fill=white,draw}]
   \tikzset{
-    entity/.style={draw, rectangle, minimum height=2em, minimum width=5em, text centered},
-    relationship/.style={draw, diamond, minimum height=2em, minimum width=5em, text centered}
+    entity/.style={draw, rectangle, minimum height=2em, minimum width=5em, text centered, fill=green!20},
+    relationship/.style={draw, diamond, minimum height=2em, minimum width=5em, text centered, fill=yellow!20}
   }
 
   \node[entity] (office) {Office};
@@ -201,21 +201,21 @@ Review the logical data model with the user for accuracy and completeness.
   \node[entity, below=of manager] (owner) {CarOwner};
   \node[entity, below=of owner] (driver) {Driver};
   \node[entity, below=of driver] (staff) {AdministrativeStaff};
-  \node[entity, right=of owner] (car) {Car};
-  \node[entity, right=of car] (job) {Job};
-  \node[entity, above=of job] (pclient) {PrivateClient};
-  \node[entity, below=of job] (bclient) {BusinessClient};
-  \node[entity, right=of job] (contract) {Contract};
+  \node[entity, right=1cm of owner] (car) {Car};
+  \node[entity, right=1cm of car] (job) {Job};
+  \node[entity, above=1cm of job] (pclient) {PrivateClient};
+  \node[entity, below=1cm of job] (bclient) {BusinessClient};
+  \node[entity, right=1cm of job] (contract) {Contract};
 
-  \node[relationship, above right=of manager] (manages) {Manages};
-  \node[relationship, below right=of owner] (owns) {Owns};
-  \node[relationship, below right=of driver] (drives) {Drives};
-  \node[relationship, below left=of staff] (employs) {Employs};
-  \node[relationship, above right=of job] (requests) {Requests};
-  \node[relationship, below right=of job] (has) {Has};
-  \node[relationship, below left=of job] (includes) {Includes};
-  \node[relationship, below right=of job] (assignedto) {AssignedTo};
-  \node[relationship, below left=of job] (uses) {Uses};
+  \node[relationship, above right=1cm and 1cm of manager] (manages) {Manages};
+  \node[relationship, below right=-2cm and -0.1cm of owner] (owns) {Owns};
+  \node[relationship, below right=-2.2cm and -0.1cm of driver] (drives) {Drives};
+  \node[relationship, below left=1cm and 1cm of staff] (employs) {Employs};
+  \node[relationship, above right=1cm and 1cm of job] (requests) {Requests};
+  \node[relationship, below right=3cm and 2cm of job] (has) {Has};
+  \node[relationship, below left=2.6cm and -0.5cm of job] (includes) {Includes};
+  \node[relationship, below right=6cm and 1cm of job] (assignedto) {AssignedTo};
+  \node[relationship, below left=-3cm and 1cm of job] (uses) {Uses};
 
   \draw (office) -- (manages);
   \draw (manages) -- (manager);
