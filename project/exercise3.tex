@@ -8,8 +8,36 @@
 \usepackage{tabularx}
 \usepackage{xcolor}
 \usepackage{colortbl}
+\usepackage{float}
 \usetikzlibrary{positioning,shapes.geometric}
 \geometry{a4paper, margin=1in}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  breakatwhitespace=true,
+  postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+  language=SQL,
+  showspaces=false,
+  showstringspaces=false,
+  frame=single,
+  framesep=2pt,
+  framerule=0pt,
+  xleftmargin=2pt,
+  xrightmargin=2pt,
+  columns=flexible,
+  tabsize=2,
+  commentstyle=\color{gray},
+  keywordstyle=\color{blue},
+  stringstyle=\color{orange},
+  identifierstyle=\color{black},
+  morekeywords={INSERT,INTO,VALUES,CREATE,TABLE,ALTER,ADD,SET,FOREIGN,KEY,REFERENCES,UPDATE},
+  otherkeywords={--,=>,->,::},
+  deletekeywords={ACCESS,KEY}
+  }
+
 \title{Database Design for Privat Transport}
 \author{University Exam}
 \date{\today}
@@ -23,112 +51,197 @@ This document details the database design process for Privat Transport, a privat
 The conceptual database design involves constructing a model of the data requirements independent of physical considerations. The steps include identifying entity types, relationship types, attributes, and keys, and validating the model against user transactions.
 
 \subsection*{Step 1.1: Identify Entity Types}
-\begin{table}[ht]
+\begin{table}[H]
 \centering
 \begin{tabularx}{\textwidth}{|X|}
 \hline
 \rowcolor{blue!20} \textbf{Entity Types} \\
 \hline
 Office \\
+\hline
 Manager \\
+\hline
 CarOwner \\
+\hline
 Driver \\
+\hline
 AdministrativeStaff \\
+\hline
 Car \\
+\hline
 PrivateClient \\
+\hline
 BusinessClient \\
+\hline
 Contract \\
+\hline
 Job \\
 \hline
 \end{tabularx}
 \end{table}
 
 \subsection*{Step 1.2: Identify Relationship Types}
-\begin{itemize}
-    \item \textbf{Manager Manages Office}
-    \item \textbf{CarOwner Owns Car}
-    \item \textbf{Driver Drives Car}
-    \item \textbf{Office Employs AdministrativeStaff}
-    \item \textbf{PrivateClient Requests Job}
-    \item \textbf{BusinessClient Has Contract}
-    \item \textbf{Contract Includes Job}
-    \item \textbf{Job AssignedTo Driver}
-    \item \textbf{Job Uses Car}
-\end{itemize}
+\begin{table}[H]
+\centering
+\begin{tabularx}{\textwidth}{|X|}
+\hline
+\rowcolor{blue!20} \textbf{Relationship Types} \\
+\hline
+Manager Manages Office \\
+\hline
+CarOwner Owns Car \\
+\hline
+Driver Drives Car \\
+\hline
+Office Employs AdministrativeStaff \\
+\hline
+PrivateClient Requests Job \\
+\hline
+BusinessClient Has Contract \\
+\hline
+Contract Includes Job \\
+\hline
+Job AssignedTo Driver \\
+\hline
+Job Uses Car \\
+\hline
+\end{tabularx}
+\end{table}
 
 \subsection*{Step 1.3: Identify and Associate Attributes}
-\begin{table}[ht]
+\begin{table}[H]
 \centering
 \begin{tabularx}{\textwidth}{|X|X|}
 \hline
 \rowcolor{blue!20} \textbf{Entity} & \textbf{Attributes} \\
 \hline
 Office & officeID, city \\
+\hline
 Manager & managerID, name, phone, officeID \\
+\hline
 CarOwner & ownerID, name, phone \\
+\hline
 Driver & driverID, name, sex, DOB, phone, officeID \\
+\hline
 AdministrativeStaff & staffID, name, phone, officeID \\
+\hline
 Car & carID, registrationNo, model, ownerID \\
+\hline
 PrivateClient & clientID, name, phone, address \\
+\hline
 BusinessClient & clientID, name, phone, address \\
+\hline
 Contract & contractID, clientID, numberOfJobs, fee \\
+\hline
 Job & jobID, clientID, contractID, pickUpDateTime, pickUpAddress, dropOffAddress, mileage, charge, status \\
 \hline
 \end{tabularx}
 \end{table}
 
 \subsection*{Step 1.4: Determine Attribute Domains}
-\begin{table}[ht]
+\begin{table}[H]
 \centering
 \begin{tabularx}{\textwidth}{|X|X|}
 \hline
 \rowcolor{blue!20} \textbf{Attribute} & \textbf{Domain} \\
 \hline
 officeID & Integer \\
+\hline
 managerID, ownerID, driverID, staffID, clientID, contractID, jobID & Integer \\
+\hline
 name, phone, address, model, registrationNo & String \\
+\hline
 sex & Char (M, F) \\
+\hline
 DOB, pickUpDateTime & Date \\
+\hline
 numberOfJobs, mileage & Integer \\
+\hline
 fee, charge & Decimal \\
+\hline
 status & String (Completed, Failed) \\
 \hline
 \end{tabularx}
 \end{table}
 
 \subsection*{Step 1.5: Determine Candidate, Primary, and Alternate Key Attributes}
-\begin{itemize}
-    \item \textbf{Office}: Primary Key = officeID
-    \item \textbf{Manager}: Primary Key = managerID
-    \item \textbf{CarOwner}: Primary Key = ownerID
-    \item \textbf{Driver}: Primary Key = driverID
-    \item \textbf{AdministrativeStaff}: Primary Key = staffID
-    \item \textbf{Car}: Primary Key = carID
-    \item \textbf{PrivateClient}: Primary Key = clientID
-    \item \textbf{BusinessClient}: Primary Key = clientID
-    \item \textbf{Contract}: Primary Key = contractID
-    \item \textbf{Job}: Primary Key = jobID
-\end{itemize}
+\begin{table}[H]
+\centering
+\begin{tabularx}{\textwidth}{|X|X|}
+\hline
+\rowcolor{blue!20} \textbf{Entity} & \textbf{Primary Key} \\
+\hline
+Office & officeID \\
+\hline
+Manager & managerID \\
+\hline
+CarOwner & ownerID \\
+\hline
+Driver & driverID \\
+\hline
+AdministrativeStaff & staffID \\
+\hline
+Car & carID \\
+\hline
+PrivateClient & clientID \\
+\hline
+BusinessClient & clientID \\
+\hline
+Contract & contractID \\
+\hline
+Job & jobID \\
+\hline
+\end{tabularx}
+\end{table}
 
 \subsection*{Step 1.6: Consider Use of Enhanced Modeling Concepts (Optional)}
-\begin{itemize}
-    \item Specialization: \textbf{Client} superclass with \textbf{PrivateClient} and \textbf{BusinessClient} subclasses.
-\end{itemize}
+\begin{table}[H]
+\centering
+\begin{tabularx}{\textwidth}{|X|}
+\hline
+\rowcolor{blue!20} \textbf{Enhanced Modeling Concepts} \\
+\hline
+Specialization: Client superclass with PrivateClient and BusinessClient subclasses. \\
+\hline
+\end{tabularx}
+\end{table}
 
 \subsection*{Step 1.7: Check Model for Redundancy}
-\begin{itemize}
-    \item Ensure no redundant entities or relationships exist.
-\end{itemize}
+\begin{table}[H]
+\centering
+\begin{tabularx}{\textwidth}{|X|}
+\hline
+\rowcolor{blue!20} \textbf{Redundancy Check} \\
+\hline
+Ensure no redundant entities or relationships exist. \\
+\hline
+\end{tabularx}
+\end{table}
 
 \subsection*{Step 1.8: Validate Conceptual Model Against User Transactions}
-\begin{itemize}
-    \item Validate that the model supports all user transactions such as listing managers, female drivers, total staff, car details, etc.
-\end{itemize}
+\begin{table}[H]
+\centering
+\begin{tabularx}{\textwidth}{|X|}
+\hline
+\rowcolor{blue!20} \textbf{Validation} \\
+\hline
+Validate that the model supports all user transactions such as listing managers, female drivers, total staff, car details, etc. \\
+\hline
+\end{tabularx}
+\end{table}
 
 \subsection*{Step 1.9: Review Conceptual Data Model with User}
-\begin{itemize}
-    \item Review the ER diagram and associated documentation with the user.
-\end{itemize}
+\begin{table}[H]
+\centering
+\begin{tabularx}{\textwidth}{|X|}
+\hline
+\rowcolor{blue!20} \textbf{Review} \\
+\hline
+Review the ER diagram and associated documentation with the user. \\
+\hline
+\end{tabularx}
+\end{table}
+
 For this step we would simply review if the ER diagram below encompasses the requirements from the them. 
 
 \begin{figure}[!ht]
@@ -188,39 +301,82 @@ For this step we would simply review if the ER diagram below encompasses the req
 The logical database design translates the conceptual data model into a relational model. The steps include deriving relations, validating them using normalization, and ensuring they support user transactions.
 
 \subsection*{Step 2.1: Derive Relations for Logical Data Model}
-\begin{table}[ht]
+\begin{table}[H]
 \centering
-\begin{tabularx}{\textwidth}{|X|X|}
+\begin{tabularx}{\textwidth}{|X|}
 \hline
 \rowcolor{green!20} \textbf{Relations for Logical Data Model} \\
 \hline
 Office(officeID, city) \\
+\hline
 Manager(managerID, name, phone, officeID) \\
+\hline
 CarOwner(ownerID, name, phone) \\
+\hline
 Driver(driverID, name, sex, DOB, phone, officeID) \\
+\hline
 AdministrativeStaff(staffID, name, phone, officeID) \\
+\hline
 Car(carID, registrationNo, model, ownerID) \\
+\hline
 PrivateClient(clientID, name, phone, address) \\
+\hline
 BusinessClient(clientID, name, phone, address) \\
+\hline
 Contract(contractID, clientID, numberOfJobs, fee) \\
+\hline
 Job(jobID, clientID, contractID, pickUpDateTime, pickUpAddress, dropOffAddress, mileage, charge, status) \\
 \hline
 \end{tabularx}
 \end{table}
 
-\newpage
-
 \subsection*{Step 2.2: Validate Relations Using Normalization}
-Ensure all relations are in at least Third Normal Form (3NF) to eliminate redundancy and ensure data integrity.
+\begin{table}[H]
+\centering
+\begin{tabularx}{\textwidth}{|X|}
+\hline
+\rowcolor{green!20} \textbf{Normalization Validation} \\
+\hline
+Ensure all relations are in at least Third Normal Form (3NF) to eliminate redundancy and ensure data integrity. \\
+\hline
+\end{tabularx}
+\end{table}
 
 \subsection*{Step 2.3: Validate Relations Against User Transactions}
-Check that each relation supports the necessary user transactions.
+\begin{table}[H]
+\centering
+\begin{tabularx}{\textwidth}{|X|}
+\hline
+\rowcolor{green!20} \textbf{User Transaction Validation} \\
+\hline
+Check that each relation supports the necessary user transactions. \\
+\hline
+\end{tabularx}
+\end{table}
 
 \subsection*{Step 2.4: Define Integrity Constraints}
-Ensure all primary keys, foreign keys, and other constraints are correctly defined.
+\begin{table}[H]
+\centering
+\begin{tabularx}{\textwidth}{|X|}
+\hline
+\rowcolor{green!20} \textbf{Integrity Constraints} \\
+\hline
+Ensure all primary keys, foreign keys, and other constraints are correctly defined. \\
+\hline
+\end{tabularx}
+\end{table}
 
 \subsection*{Step 2.5: Review Logical Data Model with User}
-Review the logical data model with the user for accuracy and completeness.
+\begin{table}[H]
+\centering
+\begin{tabularx}{\textwidth}{|X|}
+\hline
+\rowcolor{green!20} \textbf{Review} \\
+\hline
+Review the logical data model with the user for accuracy and completeness. \\
+\hline
+\end{tabularx}
+\end{table}
 
 \begin{figure}[!ht]
 \centering
@@ -284,7 +440,7 @@ Create SQL scripts for each table based on the logical data model.
 \subsection*{SQL Implementation}
 
 \subsubsection*{Create Tables}
-\begin{verbatim}
+\begin{lstlisting}[language=SQL]
 CREATE TABLE Office (
     officeID INT PRIMARY KEY,
     city VARCHAR(100)
@@ -365,7 +521,7 @@ CREATE TABLE Job (
     FOREIGN KEY (clientID) REFERENCES PrivateClient(clientID),
     FOREIGN KEY (contractID) REFERENCES Contract(contractID)
 );
-\end{verbatim}
+\end{lstlisting}
 
 \section*{Conclusion}
 This report shows the complete database design process for Privat Transport, including conceptual, logical, and physical design phases. The models and SQL scripts provided ensure a robust database implementation suitable for the company's needs.
