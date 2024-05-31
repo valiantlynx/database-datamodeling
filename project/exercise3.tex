@@ -5,274 +5,335 @@
 \usepackage{graphicx}
 \usepackage{tikz}
 \usepackage{geometry}
+\usetikzlibrary{positioning,shapes.geometric}
 \geometry{a4paper, margin=1in}
-
-\title{Database Design and Modeling}
+\title{Database Design for Privat Transport}
 \author{University Exam}
 \date{\today}
-
 \begin{document}
-
 \maketitle
 
 \section*{Introduction}
+This document details the database design process for Privat Transport, a private transport company established in Grimstad in 2023. The design follows a structured methodology comprising conceptual, logical, and physical database design phases. The objective is to create a database application to support the operations of Privat Transport, addressing issues of information sharing and administrative efficiency.
 
-This document provides a detailed methodology for database design and modeling, focusing primarily on the conceptual and logical design phases. The methodology follows the steps outlined in the provided Connolly and Begg's database design guidelines.
-
-\section*{Step 1: Conceptual Database Design}
-
-The conceptual database design phase involves building a conceptual representation of the database that includes identifying the important entities, relationships, and attributes. The steps are as follows:
+\section*{Conceptual Database Design}
+The conceptual database design involves constructing a model of the data requirements independent of physical considerations. The steps include identifying entity types, relationship types, attributes, and keys, and validating the model against user transactions.
 
 \subsection*{Step 1.1: Identify Entity Types}
-Identify the main objects of interest (entities) within the given problem statement. These are typically nouns or noun phrases in the specification.
-
 \begin{itemize}
-    \item \textbf{Staff}
-    \item \textbf{PropertyForRent}
-    \item \textbf{PrivateOwner}
-    \item \textbf{BusinessOwner}
-    \item \textbf{Client}
-    \item \textbf{Preference}
-    \item \textbf{Lease}
+    \item \textbf{Office}
+    \item \textbf{Manager}
+    \item \textbf{CarOwner}
+    \item \textbf{Driver}
+    \item \textbf{AdministrativeStaff}
+    \item \textbf{Car}
+    \item \textbf{PrivateClient}
+    \item \textbf{BusinessClient}
+    \item \textbf{Contract}
+    \item \textbf{Job}
 \end{itemize}
 
 \subsection*{Step 1.2: Identify Relationship Types}
-Determine the relationships between the identified entities. Relationships are usually verbs or verb phrases.
-
 \begin{itemize}
-    \item \textbf{Staff Manages PropertyForRent}
-    \item \textbf{PrivateOwner Owns PropertyForRent}
-    \item \textbf{PropertyForRent AssociatedWith Lease}
+    \item \textbf{Manager Manages Office}
+    \item \textbf{CarOwner Owns Car}
+    \item \textbf{Driver Drives Car}
+    \item \textbf{Office Employs AdministrativeStaff}
+    \item \textbf{PrivateClient Requests Job}
+    \item \textbf{BusinessClient Has Contract}
+    \item \textbf{Contract Includes Job}
+    \item \textbf{Job AssignedTo Driver}
+    \item \textbf{Job Uses Car}
 \end{itemize}
 
-\subsection*{Step 1.3: Identify and Associate Attributes with Entity or Relationship Types}
-List the attributes for each entity or relationship.
-
+\subsection*{Step 1.3: Identify and Associate Attributes}
 \begin{itemize}
-    \item \textbf{Staff}: staffNo, fName, lName, position, sex, DOB
-    \item \textbf{PropertyForRent}: propertyNo, address, type, rooms, rent
-    \item \textbf{PrivateOwner}: ownerNo, name, address, telNo
-    \item \textbf{BusinessOwner}: ownerNo, bName, bType, address, telNo, contactName
-    \item \textbf{Client}: clientNo, fName, lName, telNo, eMail
-    \item \textbf{Preference}: prefType, maxRent
-    \item \textbf{Lease}: leaseNo, paymentMethod, deposit, depositPaid, rentStart, rentFinish
+    \item \textbf{Office}: officeID, city
+    \item \textbf{Manager}: managerID, name, phone, officeID
+    \item \textbf{CarOwner}: ownerID, name, phone
+    \item \textbf{Driver}: driverID, name, sex, DOB, phone, officeID
+    \item \textbf{AdministrativeStaff}: staffID, name, phone, officeID
+    \item \textbf{Car}: carID, registrationNo, model, ownerID
+    \item \textbf{PrivateClient}: clientID, name, phone, address
+    \item \textbf{BusinessClient}: clientID, name, phone, address
+    \item \textbf{Contract}: contractID, clientID, numberOfJobs, fee
+    \item \textbf{Job}: jobID, clientID, contractID, pickUpDateTime, pickUpAddress, dropOffAddress, mileage, charge, status
 \end{itemize}
 
 \subsection*{Step 1.4: Determine Attribute Domains}
-Define the domain for each attribute.
-
 \begin{itemize}
-    \item \textbf{staffNo}: String(5)
-    \item \textbf{fName, lName}: String(50)
-    \item \textbf{position}: String(30)
-    \item \textbf{sex}: Char(1) {'M', 'F'}
-    \item \textbf{DOB}: Date
-    \item \textbf{propertyNo}: String(5)
-    \item \textbf{address}: Composite {street: String(100), city: String(50), postcode: String(10)}
-    \item \textbf{type}: String(20)
-    \item \textbf{rooms}: Integer
-    \item \textbf{rent}: Decimal
-    \item \textbf{ownerNo}: String(5)
-    \item \textbf{name, bName, contactName}: String(50)
-    \item \textbf{bType}: String(20)
-    \item \textbf{telNo}: String(15)
-    \item \textbf{clientNo}: String(5)
-    \item \textbf{telNo, eMail}: String(50)
-    \item \textbf{prefType}: String(20)
-    \item \textbf{maxRent}: Decimal
-    \item \textbf{leaseNo}: String(5)
-    \item \textbf{paymentMethod}: String(20)
-    \item \textbf{deposit, depositPaid}: Decimal
-    \item \textbf{rentStart, rentFinish}: Date
+    \item \textbf{officeID}: Integer
+    \item \textbf{managerID, ownerID, driverID, staffID, clientID, contractID, jobID}: Integer
+    \item \textbf{name, phone, address, model, registrationNo}: String
+    \item \textbf{sex}: Char (M, F)
+    \item \textbf{DOB, pickUpDateTime}: Date
+    \item \textbf{numberOfJobs, mileage}: Integer
+    \item \textbf{fee, charge}: Decimal
+    \item \textbf{status}: String (Completed, Failed)
 \end{itemize}
 
 \subsection*{Step 1.5: Determine Candidate, Primary, and Alternate Key Attributes}
-Identify the candidate keys for each entity and choose the primary key.
-
 \begin{itemize}
-    \item \textbf{Staff}: Primary Key = staffNo
-    \item \textbf{PropertyForRent}: Primary Key = propertyNo
-    \item \textbf{PrivateOwner}: Primary Key = ownerNo
-    \item \textbf{BusinessOwner}: Primary Key = ownerNo
-    \item \textbf{Client}: Primary Key = clientNo
-    \item \textbf{Preference}: Composite Key = {clientNo, prefType}
-    \item \textbf{Lease}: Primary Key = leaseNo
+    \item \textbf{Office}: Primary Key = officeID
+    \item \textbf{Manager}: Primary Key = managerID
+    \item \textbf{CarOwner}: Primary Key = ownerID
+    \item \textbf{Driver}: Primary Key = driverID
+    \item \textbf{AdministrativeStaff}: Primary Key = staffID
+    \item \textbf{Car}: Primary Key = carID
+    \item \textbf{PrivateClient}: Primary Key = clientID
+    \item \textbf{BusinessClient}: Primary Key = clientID
+    \item \textbf{Contract}: Primary Key = contractID
+    \item \textbf{Job}: Primary Key = jobID
 \end{itemize}
 
 \subsection*{Step 1.6: Consider Use of Enhanced Modeling Concepts (Optional)}
-Use enhanced ER modeling concepts like generalization/specialization, aggregation, or composition if necessary. For instance, PrivateOwner and BusinessOwner can be specialized from Owner.
+\begin{itemize}
+    \item Specialization: \textbf{Client} superclass with \textbf{PrivateClient} and \textbf{BusinessClient} subclasses.
+\end{itemize}
 
 \subsection*{Step 1.7: Check Model for Redundancy}
-Re-examine the model to ensure there are no redundant entities or relationships.
+\begin{itemize}
+    \item Ensure no redundant entities or relationships exist.
+\end{itemize}
 
-\subsection*{Step 1.8: Validate Conceptual Data Model Against User Transactions}
-Ensure that the conceptual data model supports all the user transactions by mapping each transaction to the data model.
+\subsection*{Step 1.8: Validate Conceptual Model Against User Transactions}
+\begin{itemize}
+    \item Validate that the model supports all user transactions such as listing managers, female drivers, total staff, car details, etc.
+\end{itemize}
 
 \subsection*{Step 1.9: Review Conceptual Data Model with User}
-Review the conceptual data model with the user to ensure it meets their requirements and expectations.
+\begin{itemize}
+    \item Review the ER diagram and associated documentation with the user.
+\end{itemize}
 
 \begin{figure}[h!]
 \centering
-\begin{tikzpicture}
-  [entity/.style={draw, rectangle, minimum height=2em, minimum width=5em, text centered},
-  relationship/.style={draw, diamond, minimum height=2em, minimum width=5em, text centered, aspect=2}]
+\begin{tikzpicture}[node distance=2cm]
+  \tikzset{
+    entity/.style={draw, rectangle, minimum height=2em, minimum width=5em, text centered},
+    relationship/.style={draw, diamond, minimum height=2em, minimum width=5em, text centered}
+  }
 
-  \node[entity] (staff) {Staff};
-  \node[entity] (property) {PropertyForRent};
-  \node[entity] (lease) {Lease};
-  \node[entity] (privateowner) {PrivateOwner};
-  \node[entity] (businessowner) {BusinessOwner};
-  \node[entity] (client) {Client};
-  \node[entity] (preference) {Preference};
+  \node[entity] (office) {Office};
+  \node[entity, below=of office] (manager) {Manager};
+  \node[entity, below=of manager] (owner) {CarOwner};
+  \node[entity, below=of owner] (driver) {Driver};
+  \node[entity, below=of driver] (staff) {AdministrativeStaff};
+  \node[entity, right=of owner] (car) {Car};
+  \node[entity, right=of car] (job) {Job};
+  \node[entity, above=of job] (pclient) {PrivateClient};
+  \node[entity, below=of job] (bclient) {BusinessClient};
+  \node[entity, right=of job] (contract) {Contract};
 
-  \node[relationship, below left=1cm and 1cm of staff] (manages) {Manages};
-  \node[relationship, below right=1cm and 1cm of privateowner] (owns) {Owns};
-  \node[relationship, above right=1cm and 1cm of lease] (associated) {AssociatedWith};
+  \node[relationship, above right=of manager] (manages) {Manages};
+  \node[relationship, below right=of owner] (owns) {Owns};
+  \node[relationship, below right=of driver] (drives) {Drives};
+  \node[relationship, below left=of staff] (employs) {Employs};
+  \node[relationship, above right=of job] (requests) {Requests};
+  \node[relationship, below right=of job] (has) {Has};
+  \node[relationship, below left=of job] (includes) {Includes};
+  \node[relationship, below right=of job] (assignedto) {AssignedTo};
+  \node[relationship, below left=of job] (uses) {Uses};
 
-  \draw (staff) -- (manages);
-  \draw (manages) -- (property);
-  \draw (privateowner) -- (owns);
-  \draw (owns) -- (property);
-  \draw (property) -- (associated);
-  \draw (associated) -- (lease);
+  \draw (office) -- (manages);
+  \draw (manages) -- (manager);
+  \draw (owner) -- (owns);
+  \draw (owns) -- (car);
+  \draw (driver) -- (drives);
+  \draw (drives) -- (car);
+  \draw (office) -- (employs);
+  \draw (employs) -- (staff);
+  \draw (pclient) -- (requests);
+  \draw (requests) -- (job);
+  \draw (bclient) -- (has);
+  \draw (has) -- (contract);
+  \draw (contract) -- (includes);
+  \draw (includes) -- (job);
+  \draw (job) -- (assignedto);
+  \draw (assignedto) -- (driver);
+  \draw (job) -- (uses);
+  \draw (uses) -- (car);
 \end{tikzpicture}
-\caption{ER Diagram for Conceptual Data Model}
+\caption{ER Diagram for Privat Transport}
 \end{figure}
 
 \newpage
 
-\section*{Step 2: Logical Database Design}
-
-The logical database design phase translates the conceptual data model into a logical structure that can be implemented using a DBMS such as MySQL or SQLite.
+\section*{Logical Database Design}
+The logical database design translates the conceptual data model into a relational model. The steps include deriving relations, validating them using normalization, and ensuring they support user transactions.
 
 \subsection*{Step 2.1: Derive Relations for Logical Data Model}
-Create relations for each entity and relationship identified in the conceptual model.
-
 \begin{itemize}
-    \item \textbf{Staff (staffNo, fName, lName, position, sex, DOB)}
-    \item \textbf{PropertyForRent (propertyNo, address, type, rooms, rent)}
-    \item \textbf{PrivateOwner (ownerNo, name, address, telNo)}
-    \item \textbf{BusinessOwner (ownerNo, bName, bType, address, telNo, contactName)}
-    \item \textbf{Client (clientNo, fName, lName, telNo, eMail, staffNo)}
-    \item \textbf{Preference (clientNo, prefType, maxRent)}
-    \item \textbf{Lease (leaseNo, propertyNo, clientNo, paymentMethod, deposit, depositPaid, rentStart, rentFinish)}
+    \item \textbf{Office(officeID, city)}
+    \item \textbf{Manager(managerID, name, phone, officeID)}
+    \item \textbf{CarOwner(ownerID, name, phone)}
+    \item \textbf{Driver(driverID, name, sex, DOB, phone, officeID)}
+    \item \textbf{AdministrativeStaff(staffID, name, phone, officeID)}
+    \item \textbf{Car(carID, registrationNo, model, ownerID)}
+    \item \textbf{PrivateClient(clientID, name, phone, address)}
+    \item \textbf{BusinessClient(clientID, name, phone, address)}
+    \item \textbf{Contract(contractID, clientID, numberOfJobs, fee)}
+    \item \textbf{Job(jobID, clientID, contractID, pickUpDateTime, pickUpAddress, dropOffAddress, mileage, charge, status)}
 \end{itemize}
 
 \subsection*{Step 2.2: Validate Relations Using Normalization}
-Ensure that each relation is in at least the Third Normal Form (3NF) to avoid redundancy and ensure data integrity.
+Ensure all relations are in at least Third Normal Form (3NF) to eliminate redundancy and ensure data integrity.
 
 \subsection*{Step 2.3: Validate Relations Against User Transactions}
-Check that each relation supports the necessary user transactions. For example, listing properties managed by a specific staff member would involve joining the \textit{Staff} and \textit{PropertyForRent} tables.
+Check that each relation supports the necessary user transactions.
 
-\subsection*{Step 2.4: Check Integrity Constraints}
-Ensure all primary keys, foreign keys, and other constraints are correctly applied.
+\subsection*{Step 2.4: Define Integrity Constraints}
+Ensure all primary keys, foreign keys, and other constraints are correctly defined.
 
 \subsection*{Step 2.5: Review Logical Data Model with User}
-Review the logical data model with the user to confirm that it accurately reflects their requirements.
+Review the logical data model with the user for accuracy and completeness.
 
 \begin{figure}[h!]
 \centering
-\begin{tikzpicture}
-  [entity/.style={draw, rectangle, minimum height=2em, minimum width=5em, text centered},
-  relationship/.style={draw, diamond, minimum height=2em, minimum width=5em, text centered, aspect=2}]
+\begin{tikzpicture}[node distance=2cm]
+  \tikzset{
+    entity/.style={draw, rectangle, minimum height=2em, minimum width=5em, text centered},
+    relationship/.style={draw, diamond, minimum height=2em, minimum width=5em, text centered}
+  }
 
-  \node[entity] (staff) {Staff};
-  \node[entity, below=2cm of staff] (property) {PropertyForRent};
-  \node[entity, right=2cm of property] (lease) {Lease};
-  \node[entity, below=2cm of property] (privateowner) {PrivateOwner};
-  \node[entity, below=2cm of privateowner] (businessowner) {BusinessOwner};
-  \node[entity, right=2cm of privateowner] (client) {Client};
-  \node[entity, below=2cm of client] (preference) {Preference};
+  \node[entity] (office) {Office};
+  \node[entity, below=of office] (manager) {Manager};
+  \node[entity, below=of manager] (owner) {CarOwner};
+  \node[entity, below=of owner] (driver) {Driver};
+  \node[entity, below=of driver] (staff) {AdministrativeStaff};
+  \node[entity, right=of owner] (car) {Car};
+  \node[entity, right=of car] (job) {Job};
+  \node[entity, above=of job] (pclient) {PrivateClient};
+  \node[entity, below=of job] (bclient) {BusinessClient};
+  \node[entity, right=of job] (contract) {Contract};
 
-  \node[relationship, below left=1cm and 1cm of staff] (manages) {Manages};
-  \node[relationship, below right=1cm and 1cm of privateowner] (owns) {Owns};
-  \node[relationship, above right=1cm and 1cm of lease] (associated) {AssociatedWith};
+  \node[relationship, above right=of manager] (manages) {Manages};
+  \node[relationship, below right=of owner] (owns) {Owns};
+  \node[relationship, below right=of driver] (drives) {Drives};
+  \node[relationship, below left=of staff] (employs) {Employs};
+  \node[relationship, above right=of job] (requests) {Requests};
+  \node[relationship, below right=of job] (has) {Has};
+  \node[relationship, below left=of job] (includes) {Includes};
+  \node[relationship, below right=of job] (assignedto) {AssignedTo};
+  \node[relationship, below left=of job] (uses) {Uses};
 
-  \draw (staff) -- (manages);
-  \draw (manages) -- (property);
-  \draw (privateowner) -- (owns);
-  \draw (owns) -- (property);
-  \draw (property) -- (associated);
-  \draw (associated) -- (lease);
+  \draw (office) -- (manages);
+  \draw (manages) -- (manager);
+  \draw (owner) -- (owns);
+  \draw (owns) -- (car);
+  \draw (driver) -- (drives);
+  \draw (drives) -- (car);
+  \draw (office) -- (employs);
+  \draw (employs) -- (staff);
+  \draw (pclient) -- (requests);
+  \draw (requests) -- (job);
+  \draw (bclient) -- (has);
+  \draw (has) -- (contract);
+  \draw (contract) -- (includes);
+  \draw (includes) -- (job);
+  \draw (job) -- (assignedto);
+  \draw (assignedto) -- (driver);
+  \draw (job) -- (uses);
+  \draw (uses) -- (car);
 \end{tikzpicture}
 \caption{ER Diagram for Logical Data Model}
 \end{figure}
 
 \newpage
 
-\section*{Step 3: Physical Database Design (Not Covered)}
+\section*{Physical Database Design}
+The physical database design involves translating the logical data model into a physical implementation on MySQL. This includes defining the SQL schema and constraints.
 
-This document focuses on the first two steps of the database design methodology. The physical design phase, which involves implementing the logical data model in a specific DBMS, is not covered.
+\subsection*{Step 3.1: Translate Logical Data Model for MySQL}
+Create SQL scripts for each table based on the logical data model.
 
-\section*{SQL Implementation}
+\subsection*{SQL Implementation}
 
-To demonstrate the implementation, below are sample SQL statements for creating tables in MySQL/SQLite based on the logical model.
-
-\subsection*{Create Tables}
-
+\subsubsection*{Create Tables}
 \begin{verbatim}
-CREATE TABLE Staff (
-    staffNo VARCHAR(5) PRIMARY KEY,
-    fName VARCHAR(50),
-    lName VARCHAR(50),
-    position VARCHAR(30),
+CREATE TABLE Office (
+    officeID INT PRIMARY KEY,
+    city VARCHAR(100)
+);
+
+CREATE TABLE Manager (
+    managerID INT PRIMARY KEY,
+    name VARCHAR(100),
+    phone VARCHAR(15),
+    officeID INT,
+    FOREIGN KEY (officeID) REFERENCES Office(officeID)
+);
+
+CREATE TABLE CarOwner (
+    ownerID INT PRIMARY KEY,
+    name VARCHAR(100),
+    phone VARCHAR(15)
+);
+
+CREATE TABLE Driver (
+    driverID INT PRIMARY KEY,
+    name VARCHAR(100),
     sex CHAR(1),
-    DOB DATE
+    DOB DATE,
+    phone VARCHAR(15),
+    officeID INT,
+    FOREIGN KEY (officeID) REFERENCES Office(officeID)
 );
 
-CREATE TABLE PropertyForRent (
-    propertyNo VARCHAR(5) PRIMARY KEY,
-    address VARCHAR(100),
-    type VARCHAR(20),
-    rooms INTEGER,
-    rent DECIMAL
+CREATE TABLE AdministrativeStaff (
+    staffID INT PRIMARY KEY,
+    name VARCHAR(100),
+    phone VARCHAR(15),
+    officeID INT,
+    FOREIGN KEY (officeID) REFERENCES Office(officeID)
 );
 
-CREATE TABLE PrivateOwner (
-    ownerNo VARCHAR(5) PRIMARY KEY,
-    name VARCHAR(50),
-    address VARCHAR(100),
-    telNo VARCHAR(15)
+CREATE TABLE Car (
+    carID INT PRIMARY KEY,
+    registrationNo VARCHAR(10),
+    model VARCHAR(50),
+    ownerID INT,
+    FOREIGN KEY (ownerID) REFERENCES CarOwner(ownerID)
 );
 
-CREATE TABLE BusinessOwner (
-    ownerNo VARCHAR(5) PRIMARY KEY,
-    bName VARCHAR(50),
-    bType VARCHAR(20),
-    address VARCHAR(100),
-    telNo VARCHAR(15),
-    contactName VARCHAR(50)
+CREATE TABLE PrivateClient (
+    clientID INT PRIMARY KEY,
+    name VARCHAR(100),
+    phone VARCHAR(15),
+    address VARCHAR(255)
 );
 
-CREATE TABLE Client (
-    clientNo VARCHAR(5) PRIMARY KEY,
-    fName VARCHAR(50),
-    lName VARCHAR(50),
-    telNo VARCHAR(50),
-    eMail VARCHAR(50),
-    staffNo VARCHAR(5),
-    FOREIGN KEY (staffNo) REFERENCES Staff(staffNo)
+CREATE TABLE BusinessClient (
+    clientID INT PRIMARY KEY,
+    name VARCHAR(100),
+    phone VARCHAR(15),
+    address VARCHAR(255)
 );
 
-CREATE TABLE Preference (
-    clientNo VARCHAR(5),
-    prefType VARCHAR(20),
-    maxRent DECIMAL,
-    PRIMARY KEY (clientNo, prefType)
+CREATE TABLE Contract (
+    contractID INT PRIMARY KEY,
+    clientID INT,
+    numberOfJobs INT,
+    fee DECIMAL(10,2),
+    FOREIGN KEY (clientID) REFERENCES BusinessClient(clientID)
 );
 
-CREATE TABLE Lease (
-    leaseNo VARCHAR(5) PRIMARY KEY,
-    propertyNo VARCHAR(5),
-    clientNo VARCHAR(5),
-    paymentMethod VARCHAR(20),
-    deposit DECIMAL,
-    depositPaid DECIMAL,
-    rentStart DATE,
-    rentFinish DATE,
-    FOREIGN KEY (propertyNo) REFERENCES PropertyForRent(propertyNo),
-    FOREIGN KEY (clientNo) REFERENCES Client(clientNo)
+CREATE TABLE Job (
+    jobID INT PRIMARY KEY,
+    clientID INT,
+    contractID INT,
+    pickUpDateTime DATETIME,
+    pickUpAddress VARCHAR(255),
+    dropOffAddress VARCHAR(255),
+    mileage INT,
+    charge DECIMAL(10,2),
+    status VARCHAR(20),
+    FOREIGN KEY (clientID) REFERENCES PrivateClient(clientID),
+    FOREIGN KEY (contractID) REFERENCES Contract(contractID)
 );
 \end{verbatim}
+
+\section*{Conclusion}
+This document presents the complete database design process for Privat Transport, including conceptual, logical, and physical design phases. The models and SQL scripts provided ensure a robust database implementation suitable for the company's needs.
 
 \end{document}
